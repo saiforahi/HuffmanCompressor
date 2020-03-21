@@ -1,8 +1,10 @@
 package application;
 	
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
@@ -17,7 +19,12 @@ public class Main extends Application {
 				primaryStage.setScene(scene);
 				primaryStage.setTitle("HuffmanCompressor");
 				primaryStage.show();
-				
+				primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		            @Override
+		            public void handle(WindowEvent event) {
+		                System.exit(0);
+		            }
+		        });
 		} catch(Exception e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());

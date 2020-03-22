@@ -5,12 +5,10 @@ public class Symbol implements Comparable<Symbol>{
 	private int frequency_value;
 	private int ascii_value;
 	private String path;
-	
 	public Symbol() {
 		this.frequency_value=0;
 		this.path=null;
 	}
-	
 	public Symbol(char newChar,int newFrequency) {
 		this.character=newChar;
 		this.frequency_value=newFrequency;
@@ -21,15 +19,12 @@ public class Symbol implements Comparable<Symbol>{
 		this.character=newChar;
 		this.ascii_value=(int)newChar;
 	}
-	
 	public char get_character() {
 		return this.character;
 	}
-	
 	public int get_frequency() {
 		return this.frequency_value;
 	}
-	
 	public void set_frequency(int newValue) {
 		this.frequency_value=newValue;
 	}

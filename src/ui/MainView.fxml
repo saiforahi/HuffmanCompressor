@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="635.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="635.0" prefWidth="986.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
    <children>
       <Label layoutX="278.0" layoutY="26.0" prefHeight="79.0" prefWidth="443.0" text="Huffman Compressor" textFill="#700707">
          <font>
             <Font size="45.0" />
          </font>
       </Label>
-      <Button fx:id="file_choose_button" layoutX="47.0" layoutY="127.0" mnemonicParsing="false" onAction="#openChooser" text="Choose File" />
-      <Label fx:id="input_label" layoutX="47.0" layoutY="198.0" prefHeight="90.0" prefWidth="436.0" text="Label" />
-      <Button fx:id="compress_btn" layoutX="47.0" layoutY="322.0" mnemonicParsing="false" onAction="#compress" prefHeight="70.0" prefWidth="127.0" text="Compress" />
-      <Line endX="23.0" endY="458.0" layoutX="474.0" layoutY="149.0" startX="23.0" startY="-20.0" strokeWidth="5.0">
+      <Button fx:id="file_choose_button" layoutX="404.0" layoutY="170.0" mnemonicParsing="false" onAction="#openChooser" text="browse" />
+      <Button fx:id="compress_btn" ellipsisString="" layoutX="83.0" layoutY="246.0" mnemonicParsing="false" onAction="#compress" prefHeight="47.0" prefWidth="313.0" text="Compress" textFill="#1c2040">
+         <font>
+            <Font size="21.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Button>
+      <Line endX="23.0" endY="458.0" layoutX="472.0" layoutY="149.0" startX="23.0" startY="-20.0" strokeWidth="5.0">
          <stroke>
             <LinearGradient endX="1.0" endY="1.0">
                <stops>
@@ -28,5 +35,21 @@
             </LinearGradient>
          </stroke>
       </Line>
+      <TextField fx:id="url_field" layoutX="31.0" layoutY="170.0" prefHeight="31.0" prefWidth="369.0" />
+      <Label layoutX="31.0" layoutY="127.0" prefHeight="31.0" prefWidth="393.0" text="Paste URL or select file">
+         <font>
+            <Font name="Comic Sans MS Bold" size="19.0" />
+         </font>
+      </Label>
+      <Label fx:id="size_label" layoutX="31.0" layoutY="213.0" prefHeight="22.0" prefWidth="208.0" text="size: " />
+      <Button fx:id="file_choose_button1" layoutX="888.0" layoutY="170.0" mnemonicParsing="false" onAction="#openChooser" text="browse" />
+      <TextField fx:id="url_field1" layoutX="515.0" layoutY="170.0" prefHeight="31.0" prefWidth="369.0" />
+      <Label layoutX="515.0" layoutY="127.0" prefHeight="31.0" prefWidth="393.0" text="Paste URL or select file">
+         <font>
+            <Font name="Comic Sans MS Bold" size="19.0" />
+         </font>
+      </Label>
+      <Label fx:id="size_label1" layoutX="515.0" layoutY="213.0" prefHeight="22.0" prefWidth="208.0" text="size: " />
+      <Pane layoutX="83.0" layoutY="318.0" prefHeight="251.0" prefWidth="313.0" />
    </children>
 </Pane>

@@ -1,26 +1,21 @@
 package classes;
 
 public class Symbol implements Comparable<Symbol>{
-	private char character;
 	private int frequency_value;
 	private int ascii_value;
 	private String path;
 	public Symbol() {
 		this.frequency_value=0;
 		this.path=null;
+		this.ascii_value=0;
 	}
-	public Symbol(char newChar,int newFrequency) {
-		this.character=newChar;
+	public Symbol(int newChar,int newFrequency) {
 		this.frequency_value=newFrequency;
-		this.ascii_value=(int)this.character;
+		this.ascii_value=newChar;
 		this.path=null;
 	}
-	public void set_character(char newChar) {
-		this.character=newChar;
-		this.ascii_value=(int)newChar;
-	}
 	public char get_character() {
-		return this.character;
+		return (char)this.ascii_value;
 	}
 	public int get_frequency() {
 		return this.frequency_value;
@@ -52,5 +47,4 @@ public class Symbol implements Comparable<Symbol>{
 		    return -1;
 		
 	}
-
 }

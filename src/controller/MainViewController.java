@@ -1,8 +1,10 @@
 package controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -15,6 +17,7 @@ import java.util.PriorityQueue;
 import java.util.Vector;
 import classes.Data;
 import classes.HuffmanNode;
+import classes.Sorter;
 import classes.Symbol;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -56,6 +59,26 @@ public class MainViewController {
     	//Runtime.getRuntime().exec("explorer.exe /select," + path);
     }
     @FXML
+    void decompress() {
+    	if(this.selectedFile!=null && this.selectedFile.getName().substring(this.selectedFile.getName().lastIndexOf('.')).equalsIgnoreCase(".sas3")) {
+			try {
+				FileInputStream fileIn = new FileInputStream(this.selectedFile);
+	            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+	            Data newData=(Data) objectIn.readObject();
+	            objectIn.close();
+	            fileIn.close();
+	            regenerate_file(newData);
+	            
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    }
+    @FXML
     void compress(ActionEvent event) {
 		try {
 			if(this.selectedFile!=null) {
@@ -71,16 +94,28 @@ public class MainViewController {
 						}
 					}
 					if(!found) {
-						characters.add(new Symbol(data.charAt(index),1));
+						characters.add(new Symbol((int)data.charAt(index),1));
 					}
 				}
 				Collections.sort(characters,Collections.reverseOrder());
+				for(int index=0;index<characters.size();index++) {
+					System.out.println(characters.get(index).get_character()+"->"+characters.get(index).get_frequency());
+				}
 		        set_paths(make_huffman_tree(characters).element(),"");
-		        generate_file(data);
+		        make_codebook();
+		        //generate_file(data);
 	    	}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+    }
+    
+    public void make_codebook() {
+    	this.characters=Sorter.heapSortInternal(characters);
+    	System.out.println();
+    	for(int index=0;index<characters.size();index++) {
+    		System.out.println((char)characters.get(index).get_ascii_value()+"->"+characters.get(index).get_path());
+    	}
     }
     @FXML
     public void initialize() {
@@ -111,6 +146,7 @@ public class MainViewController {
     		for(int index=0;index<this.characters.size();index++) {
     			if(this.characters.get(index).get_ascii_value()==node.askii) {
     				this.characters.get(index).set_path(s);
+    				//System.out.println(this.characters.get(index).get_character()+"->"+this.characters.get(index).get_path());
     				break;
     			}
     		}
@@ -141,7 +177,7 @@ public class MainViewController {
     	    bitcounter++;
     	}
     	try {
-    		Data d=new Data(map,bitSet);
+    		Data d=new Data();
     		String fileName=this.selectedFile.getName().substring(0,this.selectedFile.getName().lastIndexOf('.'));
             OutputStream os = new FileOutputStream(selectedFile.getParent()+"\\"+fileName+".sas3");
             ObjectOutputStream objectOut = new ObjectOutputStream(os);
@@ -152,6 +188,15 @@ public class MainViewController {
             characters.clear();
             output_text.setText(selectedFile.getParent()+"\\"+fileName+".sas3");
             output_size.setText("Size :"+new File(this.selectedFile.getParent()+"\\"+fileName+".sas3").length()+" bytes");
+            System.out.println("Bitset:");
+            for(int index=0;index<bitSet.length();index++) {
+            	if(bitSet.get(index)) {
+            		System.out.print(1);
+            	}
+            	else {
+            		System.out.print(0);
+            	}
+            }
             showInformation("Alert","Completed");
         } 
         catch (Exception e) {
@@ -201,13 +246,51 @@ public class MainViewController {
             ztemp3.left = xtemp1; 
             // second extracted node as the right child. 
             ztemp3.right = ytemp2; 
-            // add this node to the priority-queue. 
             queue.add(ztemp3);
         }
 		return queue;
     }
     
-    public void regenerate_file() {
-    	
+    public void regenerate_file(Data newData) {
+    	System.out.println("Bitset:");
+    	for(int index=0;index<newData.get_bits().length();index++) {
+        	if(newData.get_bits().get(index)) {
+        		System.out.print(1);
+        	}
+        	else {
+        		System.out.print(0);
+        	}
+        }
+    	System.out.println("\n");
+    	String text="";
+    	characters=new Vector<Symbol>();
+    	//generate_codeBook(newData.get_node(),"");
+    	System.out.println(characters.size());
+        String temp="";
+        for(int index=0;index<newData.get_bits().length();index++) {
+        	if(newData.get_bits().get(index)) {
+                temp += "1";
+            } else {
+                temp += "0";
+            }
+        	for(int index2=0;index2<characters.size();index2++) {
+        		if(characters.get(index2).get_path().equalsIgnoreCase(temp)) {
+        			text+=characters.get(index2).get_character();
+        			temp="";
+        			break;
+        		}
+        	}
+        }
+        characters.clear();
+        System.out.println(text);
     }
-}
+    
+    public void generate_codeBook(HuffmanNode root,String s) {
+    	if(root.left == null && root.right == null) {
+    		characters.add(new Symbol(root.askii,root.frequency_value,s));
+    		return;
+    	}
+    	set_paths(root.left,s+"0");
+    	set_paths(root.right,s+"1");
+    }
+} 

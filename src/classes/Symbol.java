@@ -14,6 +14,11 @@ public class Symbol implements Comparable<Symbol>{
 		this.ascii_value=newChar;
 		this.path=null;
 	}
+	public Symbol(int newChar,int newFrequency,String newPath) {
+		this.frequency_value=newFrequency;
+		this.ascii_value=newChar;
+		this.path=newPath;
+	}
 	public char get_character() {
 		return (char)this.ascii_value;
 	}

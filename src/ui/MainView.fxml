@@ -28,9 +28,9 @@
             </LinearGradient>
          </stroke>
       </Line>
-      <Pane layoutX="519.0" layoutY="329.0" prefHeight="316.0" prefWidth="432.0">
+      <Pane layoutX="519.0" layoutY="329.0" prefHeight="316.0" prefWidth="432.0" style="-fx-border-color: black;">
          <children>
-            <Button fx:id="decompress_btn" ellipsisString="" layoutX="84.0" layoutY="34.0" mnemonicParsing="false" onAction="#compress" prefHeight="47.0" prefWidth="265.0" text="Decompress" textFill="#1c2040">
+            <Button fx:id="decompress_btn" ellipsisString="" layoutX="84.0" layoutY="34.0" mnemonicParsing="false" onAction="#decompress" prefHeight="47.0" prefWidth="265.0" text="Decompress" textFill="#1c2040">
                <font>
                   <Font size="21.0" />
                </font>

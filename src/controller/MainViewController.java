@@ -33,6 +33,7 @@ import javafx.stage.StageStyle;
 
 public class MainViewController {
 	private Vector<Symbol> characters;
+	private Symbol[] inputs;
 	private File selectedFile;
 	@FXML
 	private Pane input_pane,compress_pane;
@@ -102,6 +103,10 @@ public class MainViewController {
 					System.out.println(characters.get(index).get_character()+"->"+characters.get(index).get_frequency());
 				}
 		        set_paths(make_huffman_tree(characters).element(),"");
+		        inputs=new Symbol[characters.size()];
+				for(int index=0;index<characters.size();index++) {
+					inputs[index]=characters.get(index);
+				}
 		        make_codebook();
 		        //generate_file(data);
 	    	}
@@ -110,11 +115,37 @@ public class MainViewController {
 		}
     }
     
-    public void make_codebook() {
-    	this.characters=Sorter.heapSortInternal(characters);
+    public void make_codebook() {      //this function is implemented by following a brief description on https://www.geeksforgeeks.org/canonical-huffman-coding/
     	System.out.println();
-    	for(int index=0;index<characters.size();index++) {
-    		System.out.println((char)characters.get(index).get_ascii_value()+"->"+characters.get(index).get_path());
+    	
+    	Sorter.insertion_sort(inputs,inputs.length);
+    	for(int index=0;index<inputs.length;index++) {
+    		System.out.println((char)inputs[index].get_ascii_value()+"->"+inputs[index].get_path());
+    	}
+    	System.out.println();
+    	for(int index=0;index<inputs.length;index++) {
+    		if(index==0) {
+    			String path="";
+    			for(int index2=0;index2<inputs[index].get_path().length();index2++) {
+    				path+="0";
+    			}
+    			inputs[index].set_path(path);
+    		}
+    		else if(inputs[index].get_path().length()>inputs[index-1].get_path().length()){
+    			int difrnc=inputs[index].get_path().length()-inputs[index-1].get_path().length();
+    			String path=Integer.toBinaryString(Integer.valueOf(inputs[index-1].get_path(),2)+ 1);
+    			for(int index2=0;index2<difrnc;index2++) {
+    				path+="0";
+    			}
+    			if(path.equalsIgnoreCase("1")) {
+    				path="01";
+    			}
+    			inputs[index].set_path(path);
+    		}
+    		else {
+    			inputs[index].set_path(Integer.toBinaryString(Integer.valueOf(inputs[index-1].get_path(),2)+ 1));
+    		}
+    		System.out.println((char)inputs[index].get_ascii_value()+"->"+inputs[index].get_path());
     	}
     }
     @FXML
@@ -141,12 +172,11 @@ public class MainViewController {
         	}
     	});
     }
-    public void set_paths(HuffmanNode node,String s) {
+    public void set_paths(HuffmanNode node,String s) {  //this function recursively set path from symbols by traversing huffman coding tree
     	if(node.left == null && node.right == null) {
     		for(int index=0;index<this.characters.size();index++) {
     			if(this.characters.get(index).get_ascii_value()==node.askii) {
     				this.characters.get(index).set_path(s);
-    				//System.out.println(this.characters.get(index).get_character()+"->"+this.characters.get(index).get_path());
     				break;
     			}
     		}
@@ -155,7 +185,7 @@ public class MainViewController {
     	set_paths(node.left,s+"0");
     	set_paths(node.right,s+"1");
     }
-    public void generate_file(String data) {
+    public void generate_file(String data) {  //this function generates file after compressing has been done
     	Map<Integer,Integer> map=new HashMap<Integer,Integer>();
     	for(int index=0;index<characters.size();index++) {
     		map.put(characters.get(index).get_ascii_value(), characters.get(index).get_frequency());

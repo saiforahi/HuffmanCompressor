@@ -3,15 +3,18 @@ package classes;
 import java.io.Serializable;
 import java.util.BitSet;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Data implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Map<Integer, Integer> huffmanCodes;
+	//private Map<Integer, Integer> huffmanCodes;
+	private TreeMap<Integer, TreeSet<Character> > huffmanCodes;
 	private BitSet bits;
-	
+	//private String bits;
 	public Data() {
 		
 	}

@@ -108,7 +108,7 @@ public class MainViewController {
 					inputs[index]=characters.get(index);
 				}
 		        make_codebook();
-		        //generate_file(data);
+		        generate_file(data);
 	    	}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -116,13 +116,13 @@ public class MainViewController {
     }
     
     public void make_codebook() {      //this function is implemented by following a brief description on https://www.geeksforgeeks.org/canonical-huffman-coding/
-    	System.out.println();
+    	//System.out.println();
     	
     	Sorter.insertion_sort(inputs,inputs.length);
-    	for(int index=0;index<inputs.length;index++) {
+    	/*for(int index=0;index<inputs.length;index++) {
     		System.out.println((char)inputs[index].get_ascii_value()+"->"+inputs[index].get_path());
     	}
-    	System.out.println();
+    	System.out.println();*/
     	for(int index=0;index<inputs.length;index++) {
     		if(index==0) {
     			String path="";
@@ -143,7 +143,11 @@ public class MainViewController {
     			inputs[index].set_path(path);
     		}
     		else {
-    			inputs[index].set_path(Integer.toBinaryString(Integer.valueOf(inputs[index-1].get_path(),2)+ 1));
+    			String path=Integer.toBinaryString(Integer.valueOf(inputs[index-1].get_path(),2)+ 1);
+    			if(path.equalsIgnoreCase("1")) {
+    				path="01";
+    			}
+    			inputs[index].set_path(path);
     		}
     		System.out.println((char)inputs[index].get_ascii_value()+"->"+inputs[index].get_path());
     	}
@@ -187,14 +191,14 @@ public class MainViewController {
     }
     public void generate_file(String data) {  //this function generates file after compressing has been done
     	Map<Integer,Integer> map=new HashMap<Integer,Integer>();
-    	for(int index=0;index<characters.size();index++) {
-    		map.put(characters.get(index).get_ascii_value(), characters.get(index).get_frequency());
+    	for(int index=0;index<inputs.length;index++) {
+    		map.put(inputs[index].get_ascii_value(), inputs[index].get_frequency());
     	}
     	String codes="";
     	for(int index=0;index<data.length();index++) {
-    		for(int index2=0;index2<characters.size();index2++) {
-    			if(characters.get(index2).get_character()==data.charAt(index)) {
-    				codes+=characters.get(index2).get_path();
+    		for(int index2=0;index2<inputs.length;index2++) {
+    			if(inputs[index2].get_character()==data.charAt(index)) {
+    				codes+=inputs[index2].get_path();
     			}
     		}
     	}
@@ -207,7 +211,7 @@ public class MainViewController {
     	    bitcounter++;
     	}
     	try {
-    		Data d=new Data();
+    		Data d=new Data(map,bitSet);
     		String fileName=this.selectedFile.getName().substring(0,this.selectedFile.getName().lastIndexOf('.'));
             OutputStream os = new FileOutputStream(selectedFile.getParent()+"\\"+fileName+".sas3");
             ObjectOutputStream objectOut = new ObjectOutputStream(os);
@@ -218,15 +222,15 @@ public class MainViewController {
             characters.clear();
             output_text.setText(selectedFile.getParent()+"\\"+fileName+".sas3");
             output_size.setText("Size :"+new File(this.selectedFile.getParent()+"\\"+fileName+".sas3").length()+" bytes");
-            System.out.println("Bitset:");
-            for(int index=0;index<bitSet.length();index++) {
+            System.out.println("Bitset: "+codes);
+            /*for(int index=0;index<bitSet.length();index++) {
             	if(bitSet.get(index)) {
             		System.out.print(1);
             	}
             	else {
             		System.out.print(0);
             	}
-            }
+            }*/
             showInformation("Alert","Completed");
         } 
         catch (Exception e) {

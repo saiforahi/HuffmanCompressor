@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Vector;
+
+import classes.Compressor;
 import classes.Data;
 import classes.HuffmanNode;
 import classes.Symbol;
@@ -57,7 +59,12 @@ public class MainViewController {
     }
     @FXML
     void open_destination(ActionEvent event) {
-    	//Runtime.getRuntime().exec("explorer.exe /select," + path);
+    	try {
+			Runtime.getRuntime().exec("explorer.exe /select," + output_text.getText().toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     @FXML
     void decompress() {
@@ -79,38 +86,14 @@ public class MainViewController {
     }
     @FXML
     void compress(ActionEvent event) {
-		try {
-			if(this.selectedFile!=null) {
-	    		String data = new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath())));
-				characters=new Vector<Symbol>();
-				for(int index=0;index<data.length();index++) {
-					boolean found=false;
-					for(int index2=0;index2<characters.size();index2++) {
-						if(characters.get(index2).get_character()==data.charAt(index)) {
-							characters.get(index2).increment_frequency(1);
-							found=true;
-							break;
-						}
-					}
-					if(!found) {
-						characters.add(new Symbol((int)data.charAt(index),1));
-					}
-				}
-				Collections.sort(characters,Collections.reverseOrder());
-				for(int index=0;index<characters.size();index++) {
-					System.out.println(characters.get(index).get_character()+"->"+characters.get(index).get_frequency());
-				}
-		        set_paths(make_huffman_tree(characters).element(),"");
-		        /*inputs=new Symbol[characters.size()];
-				for(int index=0;index<characters.size();index++) {
-					inputs[index]=characters.get(index);
-				}
-		        make_codebook();*/
-		        generate_file(data);
-	    	}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    	Compressor.compress(characters, selectedFile);
+    	String fileName=this.selectedFile.getName().substring(0,this.selectedFile.getName().lastIndexOf('.'));
+    	File output=new File(selectedFile.getParent()+"\\"+fileName+".sas3");
+    	if(output.exists() && output.length()>0) {
+    		output_text.setText(selectedFile.getParent()+"\\"+fileName+".sas3");
+            output_size.setText("Size :"+new File(selectedFile.getParent()+"\\"+fileName+".sas3").length()+" bytes");
+    	}
+    	
     }
     
     
@@ -137,114 +120,6 @@ public class MainViewController {
         		size_label.setText("Not a file");
         	}
     	});
-    }
-    public void set_paths(HuffmanNode node,String s) {  //this function recursively set path from symbols by traversing huffman coding tree
-    	if(node.left == null && node.right == null) {
-    		for(int index=0;index<this.characters.size();index++) {
-    			if(this.characters.get(index).get_ascii_value()==node.askii) {
-    				this.characters.get(index).set_path(s);
-    				break;
-    			}
-    		}
-    		return;
-    	}
-    	set_paths(node.left,s+"0");
-    	set_paths(node.right,s+"1");
-    }
-    public void generate_file(String data) {  //this function generates file after compressing has been done
-    	Map<Character,String> map=new HashMap<Character,String>();
-    	for(int index=0;index<characters.size();index++) {
-    		map.put(characters.get(index).get_character(), characters.get(index).get_path());
-    	}
-    	String codes="";
-    	for(int index=0;index<data.length();index++) {
-    		for(int index2=0;index2<characters.size();index2++) {
-    			if(characters.get(index2).get_character()==data.charAt(index)) {
-    				codes+=characters.get(index2).get_path();
-    			}
-    		}
-    	}
-    	BitSet bitSet = new BitSet(codes.length());
-    	int bitcounter = 0;
-    	for(Character c : codes.toCharArray()) {
-    	    if(c.equals('1')) {
-    	        bitSet.set(bitcounter);
-    	    }
-    	    bitcounter++;
-    	}
-    	try {
-    		Data d=new Data(map,bitSet);
-    		String fileName=this.selectedFile.getName().substring(0,this.selectedFile.getName().lastIndexOf('.'));
-            OutputStream os = new FileOutputStream(selectedFile.getParent()+"\\"+fileName+".sas3");
-            ObjectOutputStream objectOut = new ObjectOutputStream(os);
-            objectOut.writeObject(d);
-            objectOut.close();
-            //os.write(bitSet.toByteArray()); 
-            os.close();
-            characters.clear();
-            output_text.setText(selectedFile.getParent()+"\\"+fileName+".sas3");
-            output_size.setText("Size :"+new File(this.selectedFile.getParent()+"\\"+fileName+".sas3").length()+" bytes");
-            System.out.println("Bitset: "+codes);
-            /*for(int index=0;index<bitSet.length();index++) {
-            	if(bitSet.get(index)) {
-            		System.out.print(1);
-            	}
-            	else {
-            		System.out.print(0);
-            	}
-            }*/
-            showInformation("Alert","Completed");
-        } 
-        catch (Exception e) {
-        	e.printStackTrace();
-        	showInformation("Error", e.getMessage());
-        } 
-    }
-    
-    public static void showInformation(String title, String message) {
-    	//Runtime.getRuntime().exec("explorer.exe /select," + path);
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.initStyle(StageStyle.UTILITY);
-        alert.setTitle("Information");
-        alert.setHeaderText(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-    
-    public PriorityQueue<HuffmanNode> make_huffman_tree(Vector<Symbol> characters) {
-    	PriorityQueue<HuffmanNode> queue = new PriorityQueue<HuffmanNode>(characters.size());  	// this function is took from 																			
-		for (int index = 0; index < characters.size(); index++) {								// https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
-            HuffmanNode hn = new HuffmanNode();
-            hn.askii = characters.get(index).get_ascii_value();
-            hn.frequency_value = characters.get(index).get_frequency();
-            hn.left = null; 
-            hn.right = null;  
-            queue.add(hn); 
-        } 
-        // Here we will extract the two minimum value 
-        // from the heap each time until 
-        // its size reduces to 1, extract until 
-        // all the nodes are extracted. 
-        while (queue.size() > 1) {
-            // first min extract. 
-            HuffmanNode xtemp1 = queue.peek(); 
-            queue.poll();
-            // second min extarct. 
-            HuffmanNode ytemp2 = queue.peek(); 
-            queue.poll();
-            // new node f which is equal 
-            HuffmanNode ztemp3 = new HuffmanNode(); 
-            // to the sum of the frequency of the two nodes 
-            // assigning values to the f node. 
-            ztemp3.frequency_value = xtemp1.frequency_value + ytemp2.frequency_value; 
-            ztemp3.askii = 0; 
-            // first extracted node as left child. 
-            ztemp3.left = xtemp1; 
-            // second extracted node as the right child. 
-            ztemp3.right = ytemp2; 
-            queue.add(ztemp3);
-        }
-		return queue;
     }
     
     public void regenerate_file(Data newData) {

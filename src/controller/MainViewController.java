@@ -1,30 +1,13 @@
 package controller;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Vector;
-
 import classes.Compressor;
-import classes.Data;
-import classes.HuffmanNode;
+import classes.Decompressor;
 import classes.Symbol;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -32,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.StageStyle;
 
 public class MainViewController {
 	private Vector<Symbol> characters;
@@ -68,21 +50,7 @@ public class MainViewController {
     }
     @FXML
     void decompress() {
-    	if(this.selectedFile!=null && this.selectedFile.getName().substring(this.selectedFile.getName().lastIndexOf('.')).equalsIgnoreCase(".sas3")) {
-			try {
-	            ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream(this.selectedFile));
-	            Data newData=(Data) objectIn.readObject();
-	            objectIn.close();
-	            regenerate_file(newData);
-	            
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}
+    	Decompressor.decompress(selectedFile, characters);
     }
     @FXML
     void compress(ActionEvent event) {
@@ -121,51 +89,6 @@ public class MainViewController {
         	}
     	});
     }
-    
-    public void regenerate_file(Data newData) {
-    	System.out.println("Bitset:");
-    	for(int index=0;index<newData.get_bits().length();index++) {
-        	if(newData.get_bits().get(index)) {
-        		System.out.print(1);
-        	}
-        	else {
-        		System.out.print(0);
-        	}
-        }
-    	System.out.println("\n");
-    	String text="";
-    	System.out.println(characters.size());
-        String temp="";
-        for(int index=0;index<newData.get_bits().length();index++) {
-        	if(newData.get_bits().get(index)) {
-                temp += "1";
-            } else {
-                temp += "0";
-            }
-        	for(Map.Entry<Character,String>m:newData.getCodeBook().entrySet()) {
-        		if(m.getValue().equals(temp)) {
-        			text+=m.getKey();
-        			temp="";
-        			break;
-        		}
-        	}
-        }
-        characters.clear();
-        System.out.println(text);
-        String fileName=this.selectedFile.getName().substring(0,this.selectedFile.getName().lastIndexOf('.'));
-        try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(this.selectedFile.getParent()+"\\"+fileName+".txt"));
-			out.write(text);
-			out.close();
-			this.selectedFile=null;
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-    }
-    
     
     /*public void make_codebook() {      //this function is implemented by following a brief description on https://www.geeksforgeeks.org/canonical-huffman-coding/
     	//System.out.println();

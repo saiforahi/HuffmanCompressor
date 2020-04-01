@@ -1,7 +1,6 @@
 package classes;
 
 import java.io.Serializable;
-import java.util.BitSet;
 import java.util.Map;
 
 public class Data implements Serializable{
@@ -10,19 +9,19 @@ public class Data implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Map<Character, String> huffmanCodes;
-	private BitSet bits;
+	private byte[] bytes;
 	public Data() {
 		
 	}
 	
-	public Data(Map<Character, String> huffmanCodes,BitSet newBits) {
+	public Data(Map<Character, String> huffmanCodes,byte[] newBits) {
 		this.huffmanCodes=huffmanCodes;
-		this.bits=newBits;
+		this.bytes=newBits;
 	}
 	
 	
-	public BitSet get_bits() {
-		return this.bits;
+	public byte[] get_bytes() {
+		return this.bytes;
 	}
 	public Map<Character, String> getCodeBook() {
 		return this.huffmanCodes;

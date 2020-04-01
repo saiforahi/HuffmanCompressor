@@ -50,7 +50,7 @@ public class MainViewController {
     }
     @FXML
     void decompress() {
-    	Decompressor.decompress(selectedFile, characters);
+    	Decompressor.decompress(selectedFile);
     }
     @FXML
     void compress(ActionEvent event) {

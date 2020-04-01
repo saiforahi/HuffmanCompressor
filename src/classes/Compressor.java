@@ -7,7 +7,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,16 +74,16 @@ public class Compressor {
     			}
     		}
     	}
-    	BitSet bitSet = new BitSet(codes.length());
+    	/*BitSet bitSet = new BitSet(codes.length());
     	int bitcounter = 0;
     	for(Character c : codes.toCharArray()) {
     	    if(c.equals('1')) {
     	        bitSet.set(bitcounter);
     	    }
     	    bitcounter++;
-    	}
+    	}*/
     	try {
-    		Data d=new Data(map,bitSet);
+    		Data d=new Data(map,codes.getBytes());
     		String fileName=selectedFile.getName().substring(0,selectedFile.getName().lastIndexOf('.'));
             OutputStream os = new FileOutputStream(selectedFile.getParent()+"\\"+fileName+".sas3");
             ObjectOutputStream objectOut = new ObjectOutputStream(os);

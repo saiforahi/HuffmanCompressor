@@ -25,7 +25,7 @@ public class MainViewController {
 	@FXML
 	private Label type_label;
 	@FXML
-    private Button decompress_btn,compress_btn,file_choose_button,open_destination_btn;
+    private Button decompress_btn,compress_btn,file_choose_button,open_destination_btn,open_destination_btn1;// && output.exists()
 	@FXML
 	private TextField url_field;
 	@FXML
@@ -43,7 +43,7 @@ public class MainViewController {
     @FXML
     void open_destination(ActionEvent event) {
     	try {
-    		if (Desktop.isDesktopSupported()) {
+    		if (Desktop.isDesktopSupported() && this.selectedFile!=null) {
     			 File file = new File(this.selectedFile.getParent());
     			 Desktop desktop = Desktop.getDesktop();
     	         desktop.open(file);
@@ -74,8 +74,6 @@ public class MainViewController {
     	if(output.exists() && output.length()>0) {
     		output_text.setText(selectedFile.getParent()+"\\"+fileName+".sas3");
             output_size.setText("Size :"+new File(selectedFile.getParent()+"\\"+fileName+".sas3").length()+" bytes");
-            int ratio=(int) ((selectedFile.length()/output.length())*100);
-            ratio_label.setText(ratio+" %");
     	}
     	
     }

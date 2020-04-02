@@ -1,12 +1,7 @@
 package classes;
 
-import java.io.Serializable;
-
-public class HuffmanNode implements Comparable<HuffmanNode> , Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class HuffmanNode implements Comparable<HuffmanNode>{
+	
 	public int frequency_value; 
     public int askii; 
     public HuffmanNode left; 

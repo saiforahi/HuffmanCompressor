@@ -43,7 +43,6 @@ public class Decompressor {
         		}
         	}
         }
-        System.out.println(decodedContent);
         String fileName=selectedFile.getName().substring(0,selectedFile.getName().lastIndexOf('.'));
         try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(selectedFile.getParent()+"\\"+fileName+".txt"));

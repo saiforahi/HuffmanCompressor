@@ -28,13 +28,18 @@ public class Data implements Serializable{
 		return this.huffmanCodes;
 	}
 	
-	
+	public void set_bytes(byte[] newBits) {
+		this.bytes=newBits;
+	}
+	public void setCodeBook(Map<Character, String> huffmanCodes) {
+		this.huffmanCodes=huffmanCodes;
+	}
 	/*@SuppressWarnings("unchecked")
 	private void readObject(ObjectInputStream in) { 
 		try {
 			in.defaultReadObject();
 			this.huffmanCodes = (Map<Character,String>) in.readObject();
-	        this.bytes = (byte[])in.readObject();
+	        this.bytes = (byte[])in.readObject();   // this is throwing OptionalIoException
 		}
 		catch(IOException e){
 			e.printStackTrace();

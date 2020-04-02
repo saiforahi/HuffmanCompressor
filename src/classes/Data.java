@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class Data implements Serializable{
+	
 	/**
 	 * 
 	 */
@@ -31,10 +32,9 @@ public class Data implements Serializable{
 	/*@SuppressWarnings("unchecked")
 	private void readObject(ObjectInputStream in) { 
 		try {
+			in.defaultReadObject();
 			this.huffmanCodes = (Map<Character,String>) in.readObject();
-	        this.bits = in.readByte();
-	        accountNumber = aInputStream.readInt();
-	        dateOpened = new Date(aInputStream.readLong());
+	        this.bytes = (byte[])in.readObject();
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -45,10 +45,15 @@ public class Data implements Serializable{
         
     }
 	 
-    private void writeObject(ObjectOutputStream aOutputStream) throws IOException {
-        aOutputStream.writeUTF(firstName);
-        aOutputStream.writeUTF(lastName);
-        aOutputStream.writeInt(accountNumber);
-        aOutputStream.writeLong(dateOpened.getTime());
+    private void writeObject(ObjectOutputStream out) {
+    	try {
+    		out.defaultWriteObject();
+    		out.writeObject(huffmanCodes);
+    		out.write(bytes);
+    	}
+    	catch(IOException e) {
+    		
+    	}
+       
     }*/
 }

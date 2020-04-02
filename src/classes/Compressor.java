@@ -74,14 +74,6 @@ public class Compressor {
     			}
     		}
     	}
-    	/*BitSet bitSet = new BitSet(codes.length());
-    	int bitcounter = 0;
-    	for(Character c : codes.toCharArray()) {
-    	    if(c.equals('1')) {
-    	        bitSet.set(bitcounter);
-    	    }
-    	    bitcounter++;
-    	}*/
     	try {
     		Data d=new Data(map,codes.getBytes());
     		String fileName=selectedFile.getName().substring(0,selectedFile.getName().lastIndexOf('.'));
@@ -93,29 +85,21 @@ public class Compressor {
             os.close();
             characters.clear();
             System.out.println("Bitset: "+codes);
-            /*for(int index=0;index<bitSet.length();index++) {
-            	if(bitSet.get(index)) {
-            		System.out.print(1);
-            	}
-            	else {
-            		System.out.print(0);
-            	}
-            }*/
-            showInformation("Alert","Completed");
+            showInformation("Completed",selectedFile);
         } 
         catch (Exception e) {
         	e.printStackTrace();
-        	showInformation("Error", e.getMessage());
         } 
     }
 	
-	public static void showInformation(String title, String message) {
+	public static void showInformation(String title,File selectedFile) {
     	//Runtime.getRuntime().exec("explorer.exe /select," + path);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.initStyle(StageStyle.UTILITY);
         alert.setTitle("Information");
         alert.setHeaderText(title);
-        alert.setContentText(message);
+        String fileName=selectedFile.getName().substring(0,selectedFile.getName().lastIndexOf('.'));
+        alert.setContentText("Size :"+new File(selectedFile.getParent()+"\\"+fileName+".sas3").length()+" bytes");
         alert.showAndWait();
     }
     

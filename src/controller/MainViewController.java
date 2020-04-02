@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
@@ -28,9 +29,9 @@ public class MainViewController {
 	@FXML
 	private TextField url_field;
 	@FXML
-	private TextArea output_text;
+	private TextArea output_text,output_text1;
 	@FXML
-	private Label size_label,output_size,ratio_label;
+	private Label size_label,de_size,output_size,ratio_label;
     @FXML
     void openChooser(ActionEvent event) {
     	FileChooser fil_chooser = new FileChooser(); 
@@ -42,7 +43,13 @@ public class MainViewController {
     @FXML
     void open_destination(ActionEvent event) {
     	try {
-			Runtime.getRuntime().exec("explorer.exe /select," + output_text.getText().toString());
+    		if (Desktop.isDesktopSupported()) {
+    			 File file = new File(this.selectedFile.getParent());
+    			 Desktop desktop = Desktop.getDesktop();
+    	         desktop.open(file);
+    	      }
+    		
+			//Runtime.getRuntime().exec("explorer.exe /select," + output_text.getText().substring(0,output_text.getText().lastIndexOf('.')));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,6 +58,13 @@ public class MainViewController {
     @FXML
     void decompress() {
     	Decompressor.decompress(selectedFile);
+    	String fileName=this.selectedFile.getName().substring(0,this.selectedFile.getName().lastIndexOf('.'));
+    	File output=new File(selectedFile.getParent()+"\\"+fileName+".txt");
+    	if(output.exists() && output.length()>0) {
+    		output_text1.setText(selectedFile.getParent()+"\\"+fileName+".txt");
+    		de_size.setText("Size :"+new File(selectedFile.getParent()+"\\"+fileName+".txt").length()+" bytes");
+    	}
+    	
     }
     @FXML
     void compress(ActionEvent event) {
@@ -60,6 +74,8 @@ public class MainViewController {
     	if(output.exists() && output.length()>0) {
     		output_text.setText(selectedFile.getParent()+"\\"+fileName+".sas3");
             output_size.setText("Size :"+new File(selectedFile.getParent()+"\\"+fileName+".sas3").length()+" bytes");
+            int ratio=(int) ((selectedFile.length()/output.length())*100);
+            ratio_label.setText(ratio+" %");
     	}
     	
     }

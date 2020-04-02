@@ -15,7 +15,6 @@ public class Decompressor {
 	            ObjectInputStream objectIn = new ObjectInputStream(new FileInputStream(selectedFile));
 	            Data newData=(Data) objectIn.readObject();
 	            objectIn.close();
-	            
 	            regenerate_file(newData,selectedFile);
 	            
 			} catch (IOException e) {

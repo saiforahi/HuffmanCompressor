@@ -104,42 +104,4 @@ public class MainViewController {
     	});
     }
     
-    /*public void make_codebook() {      //this function is implemented by following a brief description on https://www.geeksforgeeks.org/canonical-huffman-coding/
-    	//System.out.println();
-    	
-    	Sorter.insertion_sort(inputs,inputs.length);
-    	for(int index=0;index<inputs.length;index++) {
-    		System.out.println((char)inputs[index].get_ascii_value()+"->"+inputs[index].get_path());
-    	}
-    	System.out.println();
-    	for(int index=0;index<inputs.length;index++) {
-    		if(index==0) {
-    			String path="";
-    			for(int index2=0;index2<inputs[index].get_path().length();index2++) {
-    				path+="0";
-    			}
-    			inputs[index].set_path(path);
-    		}
-    		else if(inputs[index].get_path().length()>inputs[index-1].get_path().length()){
-    			int difrnc=inputs[index].get_path().length()-inputs[index-1].get_path().length();
-    			String path=Integer.toBinaryString(Integer.valueOf(inputs[index-1].get_path(),2)+ 1);
-    			for(int index2=0;index2<difrnc;index2++) {
-    				path+="0";
-    			}
-    			if(path.equalsIgnoreCase("1")) {
-    				path="01";
-    			}
-    			inputs[index].set_path(path);
-    		}
-    		else {
-    			String path=Integer.toBinaryString(Integer.valueOf(inputs[index-1].get_path(),2)+ 1);
-    			if(path.equalsIgnoreCase("1")) {
-    				path="01";
-    			}
-    			inputs[index].set_path(path);
-    		}
-    		System.out.println((char)inputs[index].get_ascii_value()+"->"+inputs[index].get_path());
-    		
-    	}
-    }*/
 } 

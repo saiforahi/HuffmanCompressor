@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -12,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Vector;
+
 import javafx.scene.control.Alert;
 import javafx.stage.StageStyle;
 
@@ -77,15 +77,15 @@ public class Compressor {
     	try {
     		Data d=new Data(map,codes.getBytes());
     		String fileName=selectedFile.getName().substring(0,selectedFile.getName().lastIndexOf('.'));
-            OutputStream os = new FileOutputStream(selectedFile.getParent()+"\\"+fileName+".sas3");
-            ObjectOutputStream objectOut = new ObjectOutputStream(os);
-            objectOut.writeObject(d);
+    		FileOutputStream fos = new FileOutputStream(selectedFile.getParent()+"\\"+fileName+".sas3");
+            ObjectOutputStream objectOut = new ObjectOutputStream(fos);
+            d.writeObject(objectOut);
             objectOut.close();
             //os.write(bitSet.toByteArray()); 
-            os.close();
+            fos.close();
             characters.clear();
-            System.out.println("Bitset: "+codes);
-            showInformation("Completed",selectedFile);
+            System.out.println("Encoded content: "+codes);
+            showInformation("Compressed!",selectedFile);
         } 
         catch (Exception e) {
         	e.printStackTrace();
@@ -119,7 +119,7 @@ public class Compressor {
         // all the nodes are extracted. 
         while (queue.size() > 1) {
             // first min extract. 
-            HuffmanNode xtemp1 = queue.peek(); 
+            HuffmanNode xtemp1 = queue.peek(); //peek() returns the minimum element from queue
             queue.poll();
             // second min extarct. 
             HuffmanNode ytemp2 = queue.peek(); 

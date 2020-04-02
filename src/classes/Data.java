@@ -1,14 +1,11 @@
 package classes;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Map;
 
-public class Data implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Data{
 	private Map<Character, String> huffmanCodes;
 	private byte[] bytes;
 	public Data() {
@@ -34,12 +31,12 @@ public class Data implements Serializable{
 	public void setCodeBook(Map<Character, String> huffmanCodes) {
 		this.huffmanCodes=huffmanCodes;
 	}
-	/*@SuppressWarnings("unchecked")
-	private void readObject(ObjectInputStream in) { 
+	
+	@SuppressWarnings("unchecked")
+	public void readObject(ObjectInputStream in) { 
 		try {
-			in.defaultReadObject();
 			this.huffmanCodes = (Map<Character,String>) in.readObject();
-	        this.bytes = (byte[])in.readObject();   // this is throwing OptionalIoException
+	        this.bytes = (byte[])in.readObject();
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -50,15 +47,15 @@ public class Data implements Serializable{
         
     }
 	 
-    private void writeObject(ObjectOutputStream out) {
+    public void writeObject(ObjectOutputStream out) {
     	try {
-    		out.defaultWriteObject();
+    		//out.defaultWriteObject();
     		out.writeObject(huffmanCodes);
-    		out.write(bytes);
+    		out.writeObject(bytes);
     	}
     	catch(IOException e) {
-    		
+    		e.printStackTrace();
     	}
        
-    }*/
+    }
 }
